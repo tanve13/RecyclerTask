@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Recycler Task</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="enter_description">Enter Description</string>
+    <string name="add">ADD</string>
+</resources>
