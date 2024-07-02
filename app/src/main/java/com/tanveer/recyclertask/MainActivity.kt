@@ -1,6 +1,7 @@
 package com.tanveer.recyclertask
 
 import android.app.Dialog
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
@@ -40,7 +41,16 @@ class MainActivity : AppCompatActivity() {
                          dialogBinding.etTitle.text.toString(),
                          dialogBinding.etDescription.text.toString()
                      ))
-                    adapter.notifyDataSetChanged()
+                    dialogBinding.rbLow.setOnClickListener{
+                        binding?.recyclerView?.setBackgroundColor(Color.RED)
+                    }
+                    dialogBinding.rbMedium.setOnClickListener{
+                        binding?.recyclerView?.setBackgroundColor(Color.BLUE)
+                    }
+                    dialogBinding.rbHigh.setOnClickListener{
+                        binding?.recyclerView?.setBackgroundColor(Color.YELLOW)
+                    }
+
                     dialog.dismiss()
                 }
 

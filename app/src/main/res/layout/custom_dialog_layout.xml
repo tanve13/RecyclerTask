@@ -7,7 +7,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/enter_title" />
+        android:text="@string/enter_title"
+        android:textSize="@dimen/dp_20"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/etTitle"
@@ -18,18 +20,49 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/description" />
+        android:text="@string/description"
+        android:textSize="@dimen/dp_20"
+        android:textStyle="bold"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_description"
+        android:layout_marginTop="@dimen/sp_30"
         android:id="@+id/etDescription"/>
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/low"
+            android:id="@+id/rbLow"
+            android:textStyle="bold"
+            android:textSize="@dimen/dp_20"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/medium"
+            android:textSize="@dimen/dp_20"
+            android:textStyle="bold"
+            android:id="@+id/rbMedium"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/high"
+            android:textStyle="bold"
+            android:textSize="@dimen/dp_20"
+            android:id="@+id/rbHigh"/>
+    </RadioGroup>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_gravity="center"
         android:id="@+id/btnAdd"/>
 
 </LinearLayout>
