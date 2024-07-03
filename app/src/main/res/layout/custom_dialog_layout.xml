@@ -28,9 +28,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_description"
+        android:minLines="4"
+        android:gravity="top|start"
         android:layout_marginTop="@dimen/sp_30"
         android:id="@+id/etDescription"/>
     <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

@@ -1,12 +1,25 @@
 package com.tanveer.recyclertask
 
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class TaskRecyclerAdapter(var list : ArrayList<TaskDataClass>): RecyclerView.Adapter<TaskRecyclerAdapter.ViewHolder>(){
+
+
+class TaskRecyclerAdapter(
+    var context: Context,
+    var list: ArrayList<TaskDataClass>,
+    var taskInterface: MainActivity
+): RecyclerView.Adapter<TaskRecyclerAdapter.ViewHolder>(){
+
+
+    private val TAG = "adapter"
+
     class ViewHolder(var view:View):RecyclerView.ViewHolder(view) {
       var tvTitle: TextView = view.findViewById(R.id.tvTitle)
         var tvDescription : TextView = view.findViewById(R.id.tvDescription)
@@ -23,8 +36,20 @@ class TaskRecyclerAdapter(var list : ArrayList<TaskDataClass>): RecyclerView.Ada
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.e(TAG,"onBindViewHolder:$position")
     holder.tvTitle.setText(list[position].title)
         holder.tvDescription.setText(list[position].description)
+        when(list[position].priority){
+            0 ->{
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(context,R.color.red))
+            }
+            1 ->{
+                holder.itemView.setBackgroundColor( ContextCompat.getColor(context,R.color.blue))
+            }
+            2 ->{
+                holder.itemView.setBackgroundColor (ContextCompat.getColor(context,R.color.yellow))
+            }
+        }
     }
 
 
