@@ -9,5 +9,7 @@
     <string name="medium">MEDIUM</string>
     <string name="high">HIGH</string>
     <string name="select_priority">Select Priority</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
 
 </resources>

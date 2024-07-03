@@ -17,4 +17,33 @@
         android:text="@string/description"
         android:textSize="@dimen/dp_20"
         android:id="@+id/tvDescription"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+        <Button
+            android:id="@+id/btnUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update"
+            android:textSize="@dimen/sp_15"
+
+            android:textStyle="bold" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:id="@+id/btndelete"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"/>
+
+</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="@dimen/sp_10"
+        android:background="@color/black"/>
+
+
 </LinearLayout>

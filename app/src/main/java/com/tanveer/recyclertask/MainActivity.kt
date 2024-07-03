@@ -8,12 +8,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tanveer.recyclertask.databinding.ActivityMainBinding
 import com.tanveer.recyclertask.databinding.CustomDialogLayoutBinding
+import com.tanveer.recyclertask.databinding.ItemTaskBinding
 
 class MainActivity : AppCompatActivity() {
     var binding: ActivityMainBinding? = null
     lateinit var linearLayoutManager: LinearLayoutManager
     var list = arrayListOf<TaskDataClass>()
-    var adapter = TaskRecyclerAdapter(this,list,this)
+    var adapter = TaskRecyclerAdapter(this, list, this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,33 +32,36 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT
             )
-          dialog.show()
+            dialog.show()
             dialogBinding.btnAdd.setOnClickListener {
                 if (dialogBinding.etTitle.text.toString().isNullOrEmpty()) {
                     dialogBinding.etTitle.error = resources.getString(R.string.enter_title)
                 } else if (dialogBinding.etDescription.text.toString().isNullOrEmpty()) {
                     dialogBinding.etDescription.error =
                         resources.getString(R.string.enter_description)
-                } else if(dialogBinding.radioGroup.checkedRadioButtonId == -1){
-                    Toast.makeText(this@MainActivity,
+                } else if (dialogBinding.radioGroup.checkedRadioButtonId == -1) {
+                    Toast.makeText(
+                        this@MainActivity,
                         resources.getString(R.string.select_priority),
-                        Toast.LENGTH_SHORT).show()
-                }
-                else { var priority = if (dialogBinding.rbHigh.isChecked)
-                    2
-                    else if (dialogBinding.rbMedium.isChecked)  {
-                    1
-                } else{
-                    0
-                }
-                     list.add(TaskDataClass(
-                         priority,
-                         dialogBinding.etTitle.text.toString(),
-                         dialogBinding.etDescription.text.toString()
-                       )
-                     )
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    var priority = if (dialogBinding.rbHigh.isChecked)
+                        2
+                    else if (dialogBinding.rbMedium.isChecked) {
+                        1
+                    } else {
+                        0
+                    }
+                    list.add(
+                        TaskDataClass(
+                            priority,
+                            dialogBinding.etTitle.text.toString(),
+                            dialogBinding.etDescription.text.toString()
+                        )
+                    )
 
-                  adapter.notifyDataSetChanged()
+                    adapter.notifyDataSetChanged()
                     dialog.dismiss()
                 }
 
@@ -65,5 +69,55 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun updateTask(position: Int) {
+        Toast.makeText(this, "updated clicked in recycler", Toast.LENGTH_SHORT).show()
+        Dialog(this).apply {
+            var dialogBinding = ItemTaskBinding.inflate(layoutInflater)
+            setContentView(dialogBinding.root)
+            window?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT
+            )
+            show()
+            dialogBinding.btnAdd.setOnClickListener {
+                if (dialogBinding.etTitle.text.toString().isNullOrEmpty()) {
+                    dialogBinding.etTitle.error = resources.getString(R.string.enter_title)
+                } else if (dialogBinding.etDescription.text.toString().isNullOrEmpty()) {
+                    dialogBinding.etDescription.error =
+                        resources.getString(R.string.enter_description)
+                } else if (dialogBinding.radioGroup.checkedRadioButtonId == -1) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        resources.getString(R.string.select_priority),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    var priority = if (dialogBinding.rbHigh.isChecked)
+                        2
+                    else if (dialogBinding.rbMedium.isChecked) {
+                        1
+                    } else {
+                        0
+                    }
+                    list.add(
+                        TaskDataClass(
+                            priority,
+                            dialogBinding.etTitle.text.toString(),
+                            dialogBinding.etDescription.text.toString()
+                        )
+                    )
 
+                    adapter.notifyDataSetChanged()
+                    dialog.dismiss()
+                }
+
+            }
+        }
+    }
 }
+    /*override fun deleteTask(position: Int) {
+
+    }*/
+
+
+

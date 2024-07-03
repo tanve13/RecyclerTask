@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -21,8 +22,10 @@ class TaskRecyclerAdapter(
     private val TAG = "adapter"
 
     class ViewHolder(var view:View):RecyclerView.ViewHolder(view) {
-      var tvTitle: TextView = view.findViewById(R.id.tvTitle)
+
+        var tvTitle: TextView = view.findViewById(R.id.tvTitle)
         var tvDescription : TextView = view.findViewById(R.id.tvDescription)
+        var btnUpdate: Button = view.findViewById(R.id.btnUpdate)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,6 +52,9 @@ class TaskRecyclerAdapter(
             2 ->{
                 holder.itemView.setBackgroundColor (ContextCompat.getColor(context,R.color.yellow))
             }
+        }
+        holder.btnUpdate.setOnClickListener{
+            taskInterface.updateTask(position)
         }
     }
 
