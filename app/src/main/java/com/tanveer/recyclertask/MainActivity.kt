@@ -1,5 +1,6 @@
 package com.tanveer.recyclertask
 
+import android.app.AlertDialog
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -118,9 +119,18 @@ class MainActivity : AppCompatActivity(), TaskInterface {
     }
 
 
-    override fun deleteTask(position: Int) {
-
+    override fun deleteTask(position: Int){
+            var alertDialog = AlertDialog.Builder(this)
+            alertDialog.setTitle(resources.getString(R.string.Do_you_want_to_delete_this_item))
+            alertDialog.setPositiveButton("Yes") { _, _ ->
+                list?.removeAt(position)
+                adapter.notifyDataSetChanged()
+            }
+            alertDialog.setNegativeButton("no") { _, _ ->
+            }
+            alertDialog.show()
+        }
     }
 
-}
+
 

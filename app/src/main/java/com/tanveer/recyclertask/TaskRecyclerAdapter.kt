@@ -26,6 +26,7 @@ class TaskRecyclerAdapter(
         var tvTitle: TextView = view.findViewById(R.id.tvTitle)
         var tvDescription : TextView = view.findViewById(R.id.tvDescription)
         var btnUpdate: Button = view.findViewById(R.id.btnUpdate)
+        var btnDelete :Button = view.findViewById(R.id.btndelete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -56,6 +57,9 @@ class TaskRecyclerAdapter(
       holder.btnUpdate.setOnClickListener {
           taskInterface.updateTask(position)
       }
+        holder.btnDelete.setOnClickListener{
+            taskInterface.deleteTask(position)
+        }
     }
 
 

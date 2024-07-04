@@ -11,5 +11,6 @@
     <string name="select_priority">Select Priority</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="Do_you_want_to_delete_this_item">Do You Want To Delete This List</string>
 
 </resources>
