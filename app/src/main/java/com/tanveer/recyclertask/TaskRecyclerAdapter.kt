@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 class TaskRecyclerAdapter(
     var context: Context,
     var list: ArrayList<TaskDataClass>,
-    var taskInterface: MainActivity
+    var taskInterface: TaskInterface
 ): RecyclerView.Adapter<TaskRecyclerAdapter.ViewHolder>(){
 
 
@@ -53,9 +53,9 @@ class TaskRecyclerAdapter(
                 holder.itemView.setBackgroundColor (ContextCompat.getColor(context,R.color.yellow))
             }
         }
-        holder.btnUpdate.setOnClickListener{
-            taskInterface.updateTask(position)
-        }
+      holder.btnUpdate.setOnClickListener {
+          taskInterface.updateTask(position)
+      }
     }
 
 

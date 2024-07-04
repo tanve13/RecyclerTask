@@ -3,6 +3,7 @@ package com.tanveer.recyclertask
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,7 +11,7 @@ import com.tanveer.recyclertask.databinding.ActivityMainBinding
 import com.tanveer.recyclertask.databinding.CustomDialogLayoutBinding
 import com.tanveer.recyclertask.databinding.ItemTaskBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TaskInterface {
     var binding: ActivityMainBinding? = null
     lateinit var linearLayoutManager: LinearLayoutManager
     var list = arrayListOf<TaskDataClass>()
@@ -69,20 +70,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun updateTask(position: Int) {
-        Toast.makeText(this, "updated clicked in recycler", Toast.LENGTH_SHORT).show()
+    override fun updateTask(position: Int) {
+        Toast.makeText(this, "update clicked", Toast.LENGTH_SHORT).show()
         Dialog(this).apply {
-            var dialogBinding = ItemTaskBinding.inflate(layoutInflater)
+            var dialogBinding = CustomDialogLayoutBinding.inflate(layoutInflater)
             setContentView(dialogBinding.root)
             window?.setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
             )
             show()
             dialogBinding.btnAdd.setOnClickListener {
-                if (dialogBinding.etTitle.text.toString().isNullOrEmpty()) {
+                if (dialogBinding.etTitle.text.toString().isEmpty()) {
                     dialogBinding.etTitle.error = resources.getString(R.string.enter_title)
-                } else if (dialogBinding.etDescription.text.toString().isNullOrEmpty()) {
+                } else if (dialogBinding.etDescription.text.toString().isEmpty()) {
                     dialogBinding.etDescription.error =
                         resources.getString(R.string.enter_description)
                 } else if (dialogBinding.radioGroup.checkedRadioButtonId == -1) {
@@ -92,32 +93,34 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    var priority = if (dialogBinding.rbHigh.isChecked)
-                        2
-                    else if (dialogBinding.rbMedium.isChecked) {
+                    var priority = if (dialogBinding.rbLow.isChecked) {
                         1
+                    } else if (dialogBinding.rbMedium.isChecked) {
+                        2
+                    } else if (dialogBinding.rbHigh.isChecked) {
+                        3
                     } else {
                         0
                     }
-                    list.add(
-                        TaskDataClass(
+                    list.set(
+                        position, TaskDataClass(
                             priority,
                             dialogBinding.etTitle.text.toString(),
-                            dialogBinding.etDescription.text.toString()
-                        )
+                            dialogBinding.etDescription.text.toString(),
+
+                            )
                     )
-
                     adapter.notifyDataSetChanged()
-                    dialog.dismiss()
+                    dismiss()
                 }
-
             }
         }
     }
+
+
+    override fun deleteTask(position: Int) {
+
+    }
+
 }
-    /*override fun deleteTask(position: Int) {
-
-    }*/
-
-
 
