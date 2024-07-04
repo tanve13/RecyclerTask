@@ -14,8 +14,8 @@ interface TodoDaoInterface {
     @Update
     fun updateToDo(taskDataClass: TaskDataClass)
 
-    @Delete
-   fun delete(taskDataClass: TaskDataClass)
+    @Query("DELETE FROM TaskDataClass where id = id")
+   fun deleteTodo(taskDataClass: TaskDataClass)
 
     @Query("SELECT * FROM TaskDataClass")
     fun getList():List<TaskDataClass>

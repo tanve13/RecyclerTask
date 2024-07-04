@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                             description = dialogBinding.etDescription.text.toString()
                         )
                     )
+
                     getList()
                     adapter.notifyDataSetChanged()
                     dialog.dismiss()
@@ -124,7 +125,10 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                     )
                     todoDatabase.todoDao().updateToDo(
                         TaskDataClass(
-                            id = 0
+                            id = 0,
+                            priority = priority,
+                            title = dialogBinding.etTitle.text.toString(),
+                            description = dialogBinding.etDescription.text.toString()
                         )
                     )
                     getList()
@@ -150,11 +154,12 @@ class MainActivity : AppCompatActivity(), TaskInterface {
             }
             alertDialog.setNegativeButton("no") { _, _ ->
             }
-         todoDatabase.todoDao().delete(
-             TaskDataClass(
+        todoDatabase.todoDao().deleteTodo(
+           TaskDataClass(
+               id = 0
+           )
+            )
 
-                 )
-         )
         alertDialog.show()
         }
     }
