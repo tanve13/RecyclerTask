@@ -55,7 +55,7 @@ class TaskRecyclerAdapter(
             }
         }
       holder.btnUpdate.setOnClickListener {
-          taskInterface.updateTask(position)
+         taskInterface.updateTask(position)
       }
         holder.btnDelete.setOnClickListener{
             taskInterface.deleteTask(position)

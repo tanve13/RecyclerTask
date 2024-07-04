@@ -15,6 +15,7 @@ import com.tanveer.recyclertask.databinding.ItemTaskBinding
 class MainActivity : AppCompatActivity(), TaskInterface {
     var binding: ActivityMainBinding? = null
     lateinit var linearLayoutManager: LinearLayoutManager
+    lateinit var todoDatabase: TodoDatabase
     var list = arrayListOf<TaskDataClass>()
     var adapter = TaskRecyclerAdapter(this, list, this)
 
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity(), TaskInterface {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+        todoDatabase = TodoDatabase.getInstance(this)
         linearLayoutManager = LinearLayoutManager(this)
         binding?.recyclerView?.layoutManager = linearLayoutManager
         binding?.recyclerView?.adapter = adapter
@@ -57,19 +59,28 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                     }
                     list.add(
                         TaskDataClass(
-                            priority,
-                            dialogBinding.etTitle.text.toString(),
-                            dialogBinding.etDescription.text.toString()
+                           priority = priority,
+                            title = dialogBinding.etTitle.text.toString(),
+                            description = dialogBinding.etDescription.text.toString()
                         )
                     )
-
+                    todoDatabase.todoDao().insertToDo(
+                        TaskDataClass(
+                            priority = priority,
+                            title = dialogBinding.etTitle.text.toString(),
+                            description = dialogBinding.etDescription.text.toString()
+                        )
+                    )
+                    getList()
                     adapter.notifyDataSetChanged()
                     dialog.dismiss()
                 }
 
             }
         }
+        getList()
     }
+
 
     override fun updateTask(position: Int) {
         Toast.makeText(this, "update clicked", Toast.LENGTH_SHORT).show()
@@ -105,17 +116,28 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                     }
                     list.set(
                         position, TaskDataClass(
-                            priority,
-                            dialogBinding.etTitle.text.toString(),
-                            dialogBinding.etDescription.text.toString(),
+                           priority =  priority,
+                          title =   dialogBinding.etTitle.text.toString(),
+                           description =  dialogBinding.etDescription.text.toString(),
 
                             )
                     )
+                    todoDatabase.todoDao().updateToDo(
+                        TaskDataClass(
+                            id = 0
+                        )
+                    )
+                    getList()
                     adapter.notifyDataSetChanged()
                     dismiss()
                 }
             }
         }
+
+    }
+    fun getList(){
+    list.addAll(todoDatabase.todoDao().getList())
+        adapter.notifyDataSetChanged()
     }
 
 
@@ -128,7 +150,12 @@ class MainActivity : AppCompatActivity(), TaskInterface {
             }
             alertDialog.setNegativeButton("no") { _, _ ->
             }
-            alertDialog.show()
+         todoDatabase.todoDao().delete(
+             TaskDataClass(
+
+                 )
+         )
+        alertDialog.show()
         }
     }
 
