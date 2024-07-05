@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity(), TaskInterface {
     var list = arrayListOf<TaskDataClass>()
     var adapter = TaskRecyclerAdapter(this, list, this)
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,6 +27,32 @@ class MainActivity : AppCompatActivity(), TaskInterface {
         linearLayoutManager = LinearLayoutManager(this)
         binding?.recyclerView?.layoutManager = linearLayoutManager
         binding?.recyclerView?.adapter = adapter
+        binding?.rbAll?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                getList()
+            }
+        }
+        binding?.Low?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(0))
+                adapter.notifyDataSetChanged()
+            }
+        }
+        binding?.Medium?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(1))
+                adapter.notifyDataSetChanged()
+            }
+        }
+        binding?.High?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(2))
+                adapter.notifyDataSetChanged()
+            }
+        }
         binding?.btnFab?.setOnClickListener {
             var dialog = Dialog(this)
             var dialogBinding = CustomDialogLayoutBinding.inflate(layoutInflater)
@@ -37,7 +62,6 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                 WindowManager.LayoutParams.MATCH_PARENT
             )
             dialog.show()
-            
             dialogBinding.btnAdd.setOnClickListener {
                 if (dialogBinding.etTitle.text.toString().isNullOrEmpty()) {
                     dialogBinding.etTitle.error = resources.getString(R.string.enter_title)
@@ -58,13 +82,13 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                     } else {
                         0
                     }
-                   /* list.add(
-                        TaskDataClass(
-                           priority = priority,
-                            title = dialogBinding.etTitle.text.toString(),
-                            description = dialogBinding.etDescription.text.toString()
-                        )
-                    )*/
+                    /* list.add(
+                         TaskDataClass(
+                            priority = priority,
+                             title = dialogBinding.etTitle.text.toString(),
+                             description = dialogBinding.etDescription.text.toString()
+                         )
+                     )*/
                     todoDatabase.todoDao().insertToDo(
                         TaskDataClass(
                             priority = priority,
@@ -83,7 +107,6 @@ class MainActivity : AppCompatActivity(), TaskInterface {
         getList()
     }
 
-
     override fun updateTask(position: Int) {
         Toast.makeText(this, "update clicked", Toast.LENGTH_SHORT).show()
         Dialog(this).apply {
@@ -94,6 +117,13 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             show()
+            dialogBinding.etTitle.setText(list[position].title)
+            dialogBinding.etDescription.setText(list[position].description)
+            when (list[position].priority) {
+                0 -> dialogBinding.rbLow.isChecked = true
+                1 -> dialogBinding.rbMedium.isChecked = true
+                2 -> dialogBinding.rbHigh.isChecked = true
+            }
             dialogBinding.btnAdd.setOnClickListener {
                 if (dialogBinding.etTitle.text.toString().isEmpty()) {
                     dialogBinding.etTitle.error = resources.getString(R.string.enter_title)
@@ -116,54 +146,52 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                     } else {
                         0
                     }
-                  /*  list.set(
-                        position, TaskDataClass(
-                           priority =  priority,
-                          title =   dialogBinding.etTitle.text.toString(),
-                           description =  dialogBinding.etDescription.text.toString(),
+                    /*  list.set(
+                          position, TaskDataClass(
+                             priority =  priority,
+                            title =   dialogBinding.etTitle.text.toString(),
+                             description =  dialogBinding.etDescription.text.toString(),
 
-                            )
-                    )*/
+                              )
+                      )*/
                     todoDatabase.todoDao().updateToDo(
                         TaskDataClass(
-                          id =  list[position].id ,
+                            id = list[position].id,
                             priority = priority,
                             title = dialogBinding.etTitle.text.toString(),
                             description = dialogBinding.etDescription.text.toString()
                         )
                     )
                     getList()
-                   /* adapter.notifyDataSetChanged()*/
+                    /* adapter.notifyDataSetChanged()*/
                     dismiss()
                 }
             }
         }
-
     }
-    fun getList(){
+
+    fun getList() {
         list.clear()
-    list.addAll(todoDatabase.todoDao().getList())
+        list.addAll(todoDatabase.todoDao().getList())
         adapter.notifyDataSetChanged()
     }
 
-
-    override fun deleteTask(position: Int){
-            var alertDialog = AlertDialog.Builder(this)
-            alertDialog.setTitle(resources.getString(R.string.Do_you_want_to_delete_this_item))
-            alertDialog.setPositiveButton("Yes") { _, _ ->
-                list?.removeAt(position)
-                adapter.notifyDataSetChanged()
-            }
-            alertDialog.setNegativeButton("no") { _, _ ->
-            }
+    override fun deleteTask(position: Int) {
+        var alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle(resources.getString(R.string.Do_you_want_to_delete_this_item))
+        alertDialog.setPositiveButton("Yes") { _, _ ->
+            list?.removeAt(position)
+            adapter.notifyDataSetChanged()
+        }
+        alertDialog.setNegativeButton("no") { _, _ ->
+        }
         todoDatabase.todoDao().deleteToDo(
             list[position]
-
-            )
-         getList()
+        )
+        getList()
         alertDialog.show()
-        }
     }
+}
 
 
 

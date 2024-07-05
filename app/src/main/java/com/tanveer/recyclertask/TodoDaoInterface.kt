@@ -20,6 +20,9 @@ interface TodoDaoInterface {
     @Query("DELETE FROM TaskDataClass where id = :id")
    fun deleteTodo(taskDataClass: TaskDataClass)*/
 
+    @Query("SELECT * FROM TaskDataClass WHERE priority =  :priority")
+    fun taskAccPriority(priority: Int) : List<TaskDataClass>
+
     @Query("SELECT * FROM TaskDataClass")
     fun getList():List<TaskDataClass>
 }
