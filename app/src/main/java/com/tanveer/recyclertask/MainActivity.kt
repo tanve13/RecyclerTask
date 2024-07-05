@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                 WindowManager.LayoutParams.MATCH_PARENT
             )
             dialog.show()
+            
             dialogBinding.btnAdd.setOnClickListener {
                 if (dialogBinding.etTitle.text.toString().isNullOrEmpty()) {
                     dialogBinding.etTitle.error = resources.getString(R.string.enter_title)
@@ -57,13 +58,13 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                     } else {
                         0
                     }
-                    list.add(
+                   /* list.add(
                         TaskDataClass(
                            priority = priority,
                             title = dialogBinding.etTitle.text.toString(),
                             description = dialogBinding.etDescription.text.toString()
                         )
-                    )
+                    )*/
                     todoDatabase.todoDao().insertToDo(
                         TaskDataClass(
                             priority = priority,
@@ -115,24 +116,24 @@ class MainActivity : AppCompatActivity(), TaskInterface {
                     } else {
                         0
                     }
-                    list.set(
+                  /*  list.set(
                         position, TaskDataClass(
                            priority =  priority,
                           title =   dialogBinding.etTitle.text.toString(),
                            description =  dialogBinding.etDescription.text.toString(),
 
                             )
-                    )
+                    )*/
                     todoDatabase.todoDao().updateToDo(
                         TaskDataClass(
-                            id = 0,
+                          id =  list[position].id ,
                             priority = priority,
                             title = dialogBinding.etTitle.text.toString(),
                             description = dialogBinding.etDescription.text.toString()
                         )
                     )
                     getList()
-                    adapter.notifyDataSetChanged()
+                   /* adapter.notifyDataSetChanged()*/
                     dismiss()
                 }
             }
@@ -140,6 +141,7 @@ class MainActivity : AppCompatActivity(), TaskInterface {
 
     }
     fun getList(){
+        list.clear()
     list.addAll(todoDatabase.todoDao().getList())
         adapter.notifyDataSetChanged()
     }
@@ -154,12 +156,11 @@ class MainActivity : AppCompatActivity(), TaskInterface {
             }
             alertDialog.setNegativeButton("no") { _, _ ->
             }
-        todoDatabase.todoDao().deleteTodo(
-           TaskDataClass(
-               id = 0
-           )
-            )
+        todoDatabase.todoDao().deleteToDo(
+            list[position]
 
+            )
+         getList()
         alertDialog.show()
         }
     }
