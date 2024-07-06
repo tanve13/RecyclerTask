@@ -7,7 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import java.lang.NullPointerException
 
-@Database(entities = [TaskDataClass::class], version = 1, exportSchema = true)
+@Database(entities = [TaskDataClass::class,ToDoEntity::class], version = 1, exportSchema = true)
 abstract class TodoDatabase:RoomDatabase() {
     abstract fun todoDao(): TodoDaoInterface
     companion object{
