@@ -1,5 +1,6 @@
 package com.tanveer.recyclertask
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.tanveer.recyclertask.databinding.CustomDialogLayoutBinding
 import com.tanveer.recyclertask.databinding.FragmentSingleNotesBinding
 import com.tanveer.recyclertask.databinding.TodoDialogBinding
 
@@ -97,13 +99,55 @@ class SingleNotesFragment : Fragment() {
     }
 
     private fun getToDoList() {
-  toDoEntity.clear()
-        todoDatabase?.todoDao()?.getToDoList(taskId = taskDataClass.id)?.let {
-            toDoEntity.addAll(
-                it
-            )
-        }
+        toDoEntity.clear()
+        toDoEntity.addAll(
+            todoDatabase?.todoDao()?.getToDoList(taskId = taskDataClass.id)
+        )
         todoAdapter.notifyDataSetChanged()
+    }
+
+    override fun updateToDoItem(position: Int) {
+        Dialog(requireContext()).apply {
+            var dialogBinding = TodoDialogBinding.inflate(layoutInflater)
+            setContentView(dialogBinding.root)
+            show()
+            dialogBinding.add.setOnClickListener {
+                if (dialogBinding.etTodo.text.toString().isNullOrEmpty()) {
+                    dialogBinding.etTodo.error = resources.getString(R.string.Enter_todo_item)
+                } else {
+                    todoDatabase?.todoDao()?.updateToDoItem(
+                        ToDoEntity(
+                            id = taskDataClass.id,
+                            taskId = toDoEntity[position].taskId,
+                            todo = dialogBinding.etTodo.toString(),
+                            isCompleted = true
+                        )
+                    )
+                    toDoEntity.clear()
+                    getToDoList()
+                    todoAdapter.notifyDataSetChanged()
+                    dismiss()
+                }
+            }
+
+        }
+
+    }
+
+    override fun deleteToDoItem(position: Int) {
+        var alertDialog = AlertDialog.Builder(requireContext())
+        alertDialog.setTitle(resources.getString(R.string.Do_you_want_to_delete_this_todo_item))
+        alertDialog.setPositiveButton("Yes") { _, _ ->
+            toDoEntity.removeAt(position)
+            todoAdapter.notifyDataSetChanged()
+        }
+        alertDialog.setNegativeButton("no") { _, _ ->
+        }
+        todoDatabase?.todoDao()?.deleteToDoItem(
+            toDoEntity[position]
+        )
+        getToDoList()
+        alertDialog.show()
     }
 
     companion object {

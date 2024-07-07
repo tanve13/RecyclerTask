@@ -19,5 +19,8 @@
     <string name="Enter_todo">Enter ToDo</string>
     <string name="is_completed">is completed</string>
     <string name="Enter_todo_item">Enter ToDoItem</string>
+    <string name="update_ToDo">Upadate ToDo</string>
+    <string name="delete_todo">Delete ToDo</string>
+    <string name="Do_you_want_to_delete_this_todo_item">Do You Want To Delete This ToDo Item?</string>
 
 </resources>

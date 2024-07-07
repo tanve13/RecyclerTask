@@ -212,6 +212,8 @@ class ToDoListFragment : Fragment(), TaskInterface {
         findNavController().navigate(R.id.singleNotesFragment, bundleOf("notes" to convertToString))
 
     }
+
+
 }
 
 

@@ -16,21 +16,21 @@ interface TodoDaoInterface {
 
     @Delete
     fun deleteToDo(taskDataClass: TaskDataClass)
-/*
-    @Query("DELETE FROM TaskDataClass where id = :id")
-   fun deleteTodo(taskDataClass: TaskDataClass)*/
+    /*
+        @Query("DELETE FROM TaskDataClass where id = :id")
+       fun deleteTodo(taskDataClass: TaskDataClass)*/
 
     @Query("SELECT * FROM TaskDataClass WHERE priority =  :priority")
-    fun taskAccPriority(priority: Int) : List<TaskDataClass>
+    fun taskAccPriority(priority: Int): List<TaskDataClass>
 
     @Query("SELECT * FROM TaskDataClass")
-    fun getList():List<TaskDataClass>
+    fun getList(): List<TaskDataClass>
 
     @Insert
     fun insertToDoItem(toDoEntity: ToDoEntity)
 
     @Query("SELECT * FROM ToDoEntity where taskId= :taskId")
-    fun getToDoList(taskId: Int):List<ToDoEntity>
+    fun getToDoList(taskId: Int): List<ToDoEntity>
 
     @Update
     fun updateToDoItem(toDoEntity: ToDoEntity)
