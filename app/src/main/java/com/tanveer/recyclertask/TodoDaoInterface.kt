@@ -25,4 +25,16 @@ interface TodoDaoInterface {
 
     @Query("SELECT * FROM TaskDataClass")
     fun getList():List<TaskDataClass>
+
+    @Insert
+    fun insertToDoItem(toDoEntity: ToDoEntity)
+
+    @Query("SELECT * FROM ToDoEntity where taskId= :taskId")
+    fun getToDoList(taskId: Int):List<ToDoEntity>
+
+    @Update
+    fun updateToDoItem(toDoEntity: ToDoEntity)
+
+    @Delete
+    fun deleteToDoItem(toDoEntity: ToDoEntity)
 }

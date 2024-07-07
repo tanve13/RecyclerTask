@@ -17,6 +17,7 @@ import com.google.gson.Gson
 import com.tanveer.recyclertask.databinding.ActivityMainBinding
 import com.tanveer.recyclertask.databinding.CustomDialogLayoutBinding
 import com.tanveer.recyclertask.databinding.FragmentTodoListBinding
+import com.tanveer.recyclertask.databinding.ItemTaskBinding
 
 class ToDoListFragment : Fragment(), TaskInterface {
     var binding: FragmentTodoListBinding? = null
@@ -30,96 +31,96 @@ class ToDoListFragment : Fragment(), TaskInterface {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       binding = FragmentTodoListBinding.inflate(layoutInflater)
+        binding = FragmentTodoListBinding.inflate(layoutInflater)
         return (binding?.root)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         todoDatabase = TodoDatabase.getInstance(requireContext())
-        adapter = TaskRecyclerAdapter(requireContext(),list,this)
-            linearLayoutManager = LinearLayoutManager(requireContext())
-            binding?.recyclerView?.layoutManager = linearLayoutManager
-            binding?.recyclerView?.adapter = adapter
-            binding?.rbAll?.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    getList()
-                }
+        adapter = TaskRecyclerAdapter(requireContext(), list, this)
+        linearLayoutManager = LinearLayoutManager(requireContext())
+        binding?.recyclerView?.layoutManager = linearLayoutManager
+        binding?.recyclerView?.adapter = adapter
+        binding?.rbAll?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                getList()
             }
-            binding?.Low?.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    list.clear()
-                    list.addAll(todoDatabase.todoDao().taskAccPriority(0))
-                    adapter.notifyDataSetChanged()
-                }
-            }
-            binding?.Medium?.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    list.clear()
-                    list.addAll(todoDatabase.todoDao().taskAccPriority(1))
-                    adapter.notifyDataSetChanged()
-                }
-            }
-            binding?.High?.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    list.clear()
-                    list.addAll(todoDatabase.todoDao().taskAccPriority(2))
-                    adapter.notifyDataSetChanged()
-                }
-            }
-            binding?.btnFab?.setOnClickListener {
-                var dialog = Dialog(requireContext())
-                var dialogBinding = CustomDialogLayoutBinding.inflate(layoutInflater)
-                dialog.setContentView(dialogBinding.root)
-                dialog.getWindow()?.setLayout(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT
-                )
-                dialog.show()
-                dialogBinding.btnAdd.setOnClickListener {
-                    if (dialogBinding.etTitle.text.toString().isNullOrEmpty()) {
-                        dialogBinding.etTitle.error = resources.getString(R.string.enter_title)
-                    } else if (dialogBinding.etDescription.text.toString().isNullOrEmpty()) {
-                        dialogBinding.etDescription.error =
-                            resources.getString(R.string.enter_description)
-                    } else if (dialogBinding.radioGroup.checkedRadioButtonId == -1) {
-                        Toast.makeText(
-                            requireContext(),
-                            resources.getString(R.string.select_priority),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        var priority = if (dialogBinding.rbHigh.isChecked)
-                            2
-                        else if (dialogBinding.rbMedium.isChecked) {
-                            1
-                        } else {
-                            0
-                        }
-                        /* list.add(
-                             TaskDataClass(
-                                priority = priority,
-                                 title = dialogBinding.etTitle.text.toString(),
-                                 description = dialogBinding.etDescription.text.toString()
-                             )
-                         )*/
-                        todoDatabase.todoDao().insertToDo(
-                            TaskDataClass(
-                                priority = priority,
-                                title = dialogBinding.etTitle.text.toString(),
-                                description = dialogBinding.etDescription.text.toString()
-                            )
-                        )
-
-                        getList()
-                        adapter.notifyDataSetChanged()
-                        dialog.dismiss()
-                    }
-
-                }
-            }
-            getList()
         }
+        binding?.Low?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(0))
+                adapter.notifyDataSetChanged()
+            }
+        }
+        binding?.Medium?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(1))
+                adapter.notifyDataSetChanged()
+            }
+        }
+        binding?.High?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(2))
+                adapter.notifyDataSetChanged()
+            }
+        }
+        binding?.btnFab?.setOnClickListener {
+            var dialog = Dialog(requireContext())
+            var dialogBinding = CustomDialogLayoutBinding.inflate(layoutInflater)
+            dialog.setContentView(dialogBinding.root)
+            dialog.getWindow()?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+            )
+            dialog.show()
+            dialogBinding.btnAdd.setOnClickListener {
+                if (dialogBinding.etTitle.text.toString().isNullOrEmpty()) {
+                    dialogBinding.etTitle.error = resources.getString(R.string.enter_title)
+                } else if (dialogBinding.etDescription.text.toString().isNullOrEmpty()) {
+                    dialogBinding.etDescription.error =
+                        resources.getString(R.string.enter_description)
+                } else if (dialogBinding.radioGroup.checkedRadioButtonId == -1) {
+                    Toast.makeText(
+                        requireContext(),
+                        resources.getString(R.string.select_priority),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    var priority = if (dialogBinding.rbHigh.isChecked)
+                        2
+                    else if (dialogBinding.rbMedium.isChecked) {
+                        1
+                    } else {
+                        0
+                    }
+                    /* list.add(
+                         TaskDataClass(
+                            priority = priority,
+                             title = dialogBinding.etTitle.text.toString(),
+                             description = dialogBinding.etDescription.text.toString()
+                         )
+                     )*/
+                    todoDatabase.todoDao().insertToDo(
+                        TaskDataClass(
+                            priority = priority,
+                            title = dialogBinding.etTitle.text.toString(),
+                            description = dialogBinding.etDescription.text.toString()
+                        )
+                    )
+
+                    getList()
+                    adapter.notifyDataSetChanged()
+                    dialog.dismiss()
+                }
+
+            }
+        }
+        getList()
+    }
 
     override fun updateTask(position: Int) {
         Toast.makeText(requireContext(), "update clicked", Toast.LENGTH_SHORT).show()
@@ -208,7 +209,7 @@ class ToDoListFragment : Fragment(), TaskInterface {
 
     override fun itemClick(position: Int) {
         var convertToString = Gson().toJson(list[position])
-    findNavController().navigate(R.id.singleNotesFragment, bundleOf("notes" to convertToString))
+        findNavController().navigate(R.id.singleNotesFragment, bundleOf("notes" to convertToString))
 
     }
 }

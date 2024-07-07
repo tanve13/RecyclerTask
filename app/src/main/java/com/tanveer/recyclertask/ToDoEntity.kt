@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = ToDoEntity::class,
+            entity = TaskDataClass::class,
             parentColumns = ["id"],
             childColumns = ["taskId"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

@@ -1,11 +1,15 @@
 package com.tanveer.recyclertask
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.tanveer.recyclertask.databinding.FragmentSingleNotesBinding
+import com.tanveer.recyclertask.databinding.TodoDialogBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,13 +25,19 @@ class SingleNotesFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var binding: FragmentSingleNotesBinding? = null
+    lateinit var linearLayoutManager: LinearLayoutManager
+    var toDoEntity = arrayListOf<ToDoEntity>()
+    lateinit var todoAdapter: ToDoItemRecycler
+    var todoItemRecycler = ToDoItemRecycler(toDoEntity)
     var taskDataClass = TaskDataClass()
+    var todoDatabase: TodoDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-           var notes = it.getString("notes")
-            taskDataClass = Gson().fromJson(notes,TaskDataClass::class.java)
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -35,8 +45,65 @@ class SingleNotesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentSingleNotesBinding.inflate(inflater)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_single_notes, container, false)
+        return (binding?.root)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        todoDatabase = TodoDatabase.getInstance(requireContext())
+        arguments?.let {
+            var notes = it.getString("notes")
+            taskDataClass = Gson().fromJson(notes, TaskDataClass::class.java)
+            binding?.tvTitle?.setText(taskDataClass.title)
+            binding?.tvDescription?.setText(taskDataClass.description)
+            getList()
+        }
+        linearLayoutManager = LinearLayoutManager(requireContext())
+        binding?.rvToDo?.adapter = todoItemRecycler
+        binding?.rvToDo?.layoutManager = linearLayoutManager
+        binding?.fabToDo?.setOnClickListener {
+            var dialog = Dialog(requireContext()).apply {
+                var dialogBinding = TodoDialogBinding.inflate(layoutInflater)
+                setContentView(dialogBinding.root)
+                show()
+                dialogBinding.add.setOnClickListener {
+                    if (dialogBinding.etTodo.text?.toString().isNullOrEmpty()) {
+                        dialogBinding.etTodo.error = resources.getString(R.string.Enter_todo_item)
+                    } else {
+                        todoDatabase?.todoDao()?.insertToDoItem(
+                            ToDoEntity(
+                                id = taskDataClass.id,
+                                taskId = taskDataClass.id,
+                                todo = dialogBinding.etTodo.text.toString(), isCompleted = true
+                            )
+                        )
+                        toDoEntity.clear()
+                        getToDoList()
+                        getList()
+                        todoAdapter.notifyDataSetChanged()
+                        dismiss()
+
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun getList() {
+        todoDatabase?.todoDao()?.getList()
+    }
+
+    private fun getToDoList() {
+  toDoEntity.clear()
+        todoDatabase?.todoDao()?.getToDoList(taskId = taskDataClass.id)?.let {
+            toDoEntity.addAll(
+                it
+            )
+        }
+        todoAdapter.notifyDataSetChanged()
     }
 
     companion object {

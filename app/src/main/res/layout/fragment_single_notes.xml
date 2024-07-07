@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="@dimen/sp_10"
     tools:context=".SingleNotesFragment">
 
     <TextView
@@ -16,7 +17,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_title" />
+        android:hint="@string/enter_title"
+        android:id="@+id/tvTitle"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -28,7 +30,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_description" />
+        android:hint="@string/enter_description"
+        android:id="@+id/tvDescription"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -38,11 +41,13 @@
         android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/rvToDo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabToDo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

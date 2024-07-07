@@ -14,19 +14,22 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/etTodo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top|start"
-        android:id="@+id/enter_todo"
-        android:hint="@string/Enter_todo"
-        android:minLines="5" />
+        android:hint="@string/Enter_todo" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/is_completed" />
 
     <Button
+        android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/add"
-        android:id="@+id/add"
         android:textSize="@dimen/sp_20" />
 
 
