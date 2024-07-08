@@ -23,7 +23,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [SingleNotesFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SingleNotesFragment : Fragment() {
+class SingleNotesFragment : Fragment(), ToDoInterface{
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -31,7 +31,6 @@ class SingleNotesFragment : Fragment() {
     lateinit var linearLayoutManager: LinearLayoutManager
     var toDoEntity = arrayListOf<ToDoEntity>()
     lateinit var todoAdapter: ToDoItemRecycler
-    var todoItemRecycler = ToDoItemRecycler(toDoEntity)
     var taskDataClass = TaskDataClass()
     var todoDatabase: TodoDatabase? = null
 
@@ -54,16 +53,18 @@ class SingleNotesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        todoAdapter = ToDoItemRecycler(toDoEntity,this)
         todoDatabase = TodoDatabase.getInstance(requireContext())
         arguments?.let {
             var notes = it.getString("notes")
             taskDataClass = Gson().fromJson(notes, TaskDataClass::class.java)
             binding?.tvTitle?.setText(taskDataClass.title)
             binding?.tvDescription?.setText(taskDataClass.description)
-            getList()
+            getToDoList()
         }
+
         linearLayoutManager = LinearLayoutManager(requireContext())
-        binding?.rvToDo?.adapter = todoItemRecycler
+        binding?.rvToDo?.adapter = todoAdapter
         binding?.rvToDo?.layoutManager = linearLayoutManager
         binding?.fabToDo?.setOnClickListener {
             var dialog = Dialog(requireContext()).apply {
@@ -76,15 +77,12 @@ class SingleNotesFragment : Fragment() {
                     } else {
                         todoDatabase?.todoDao()?.insertToDoItem(
                             ToDoEntity(
-                                id = taskDataClass.id,
                                 taskId = taskDataClass.id,
-                                todo = dialogBinding.etTodo.text.toString(), isCompleted = true
+                                todo = dialogBinding.etTodo.text.toString(),
+                                isCompleted = dialogBinding.cbIsCompleted.isChecked
                             )
                         )
-                        toDoEntity.clear()
                         getToDoList()
-                        getList()
-                        todoAdapter.notifyDataSetChanged()
                         dismiss()
 
                     }
@@ -94,14 +92,10 @@ class SingleNotesFragment : Fragment() {
 
     }
 
-    private fun getList() {
-        todoDatabase?.todoDao()?.getList()
-    }
-
     private fun getToDoList() {
         toDoEntity.clear()
         toDoEntity.addAll(
-            todoDatabase?.todoDao()?.getToDoList(taskId = taskDataClass.id)
+            todoDatabase?.todoDao()?.getToDoList(taskId = taskDataClass.id)?: toDoEntity
         )
         todoAdapter.notifyDataSetChanged()
     }
@@ -117,15 +111,13 @@ class SingleNotesFragment : Fragment() {
                 } else {
                     todoDatabase?.todoDao()?.updateToDoItem(
                         ToDoEntity(
-                            id = taskDataClass.id,
-                            taskId = toDoEntity[position].taskId,
+                            taskId = taskDataClass.id,
+                            id = toDoEntity[position].taskId?:0,
                             todo = dialogBinding.etTodo.toString(),
-                            isCompleted = true
+                            isCompleted = dialogBinding.cbIsCompleted.isChecked
                         )
                     )
-                    toDoEntity.clear()
                     getToDoList()
-                    todoAdapter.notifyDataSetChanged()
                     dismiss()
                 }
             }
@@ -139,14 +131,13 @@ class SingleNotesFragment : Fragment() {
         alertDialog.setTitle(resources.getString(R.string.Do_you_want_to_delete_this_todo_item))
         alertDialog.setPositiveButton("Yes") { _, _ ->
             toDoEntity.removeAt(position)
-            todoAdapter.notifyDataSetChanged()
+            getToDoList()
         }
         alertDialog.setNegativeButton("no") { _, _ ->
         }
         todoDatabase?.todoDao()?.deleteToDoItem(
             toDoEntity[position]
         )
-        getToDoList()
         alertDialog.show()
     }
 

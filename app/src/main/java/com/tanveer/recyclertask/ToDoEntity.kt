@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class ToDoEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var taskId: Int? = 0,
     var todo: String? = null,
