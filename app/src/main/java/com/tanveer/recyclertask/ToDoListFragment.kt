@@ -195,15 +195,15 @@ class ToDoListFragment : Fragment(), TaskInterface {
         var alertDialog = AlertDialog.Builder(requireContext())
         alertDialog.setTitle(resources.getString(R.string.Do_you_want_to_delete_this_item))
         alertDialog.setPositiveButton("Yes") { _, _ ->
-            list?.removeAt(position)
-            adapter.notifyDataSetChanged()
+            list.removeAt(position)
+          getList()
         }
         alertDialog.setNegativeButton("no") { _, _ ->
         }
         todoDatabase.todoDao().deleteToDo(
             list[position]
         )
-        getList()
+
         alertDialog.show()
     }
 
