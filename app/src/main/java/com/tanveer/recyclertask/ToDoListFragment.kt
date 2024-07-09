@@ -23,7 +23,7 @@ class ToDoListFragment : Fragment(), TaskInterface {
     var binding: FragmentTodoListBinding? = null
     lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var todoDatabase: TodoDatabase
-    var list = arrayListOf<TaskDataClass>()
+    var list = arrayListOf<TaskList>()
     lateinit var adapter: TaskRecyclerAdapter
 
     override fun onCreateView(
@@ -42,32 +42,7 @@ class ToDoListFragment : Fragment(), TaskInterface {
         linearLayoutManager = LinearLayoutManager(requireContext())
         binding?.recyclerView?.layoutManager = linearLayoutManager
         binding?.recyclerView?.adapter = adapter
-        binding?.rbAll?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                getList()
-            }
-        }
-        binding?.Low?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                list.clear()
-                list.addAll(todoDatabase.todoDao().taskAccPriority(0))
-                adapter.notifyDataSetChanged()
-            }
-        }
-        binding?.Medium?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                list.clear()
-                list.addAll(todoDatabase.todoDao().taskAccPriority(1))
-                adapter.notifyDataSetChanged()
-            }
-        }
-        binding?.High?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                list.clear()
-                list.addAll(todoDatabase.todoDao().taskAccPriority(2))
-                adapter.notifyDataSetChanged()
-            }
-        }
+
         binding?.btnFab?.setOnClickListener {
             var dialog = Dialog(requireContext())
             var dialogBinding = CustomDialogLayoutBinding.inflate(layoutInflater)
@@ -120,6 +95,32 @@ class ToDoListFragment : Fragment(), TaskInterface {
             }
         }
         getList()
+        binding?.rbAll?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                getList()
+            }
+        }
+        binding?.Low?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(0))
+                adapter.notifyDataSetChanged()
+            }
+        }
+        binding?.Medium?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(1))
+                adapter.notifyDataSetChanged()
+            }
+        }
+        binding?.High?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                list.clear()
+                list.addAll(todoDatabase.todoDao().taskAccPriority(2))
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun updateTask(position: Int) {
@@ -132,9 +133,9 @@ class ToDoListFragment : Fragment(), TaskInterface {
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             show()
-            dialogBinding.etTitle.setText(list[position].title)
-            dialogBinding.etDescription.setText(list[position].description)
-            when (list[position].priority) {
+            dialogBinding.etTitle.setText(list[position].taskDataClass.title)
+            dialogBinding.etDescription.setText(list[position].taskDataClass.description)
+            when (list[position].taskDataClass.priority) {
                 0 -> dialogBinding.rbLow.isChecked = true
                 1 -> dialogBinding.rbMedium.isChecked = true
                 2 -> dialogBinding.rbHigh.isChecked = true
@@ -171,10 +172,11 @@ class ToDoListFragment : Fragment(), TaskInterface {
                       )*/
                     todoDatabase.todoDao().updateToDo(
                         TaskDataClass(
-                            id = list[position].id,
+                            id = list[position].taskDataClass.id,
                             priority = priority,
                             title = dialogBinding.etTitle.text.toString(),
-                            description = dialogBinding.etDescription.text.toString()
+                            description = dialogBinding.etDescription.text.toString(),
+                            createdDate = list[position].taskDataClass.createdDate
                         )
                     )
                     getList()
@@ -187,7 +189,7 @@ class ToDoListFragment : Fragment(), TaskInterface {
 
     fun getList() {
         list.clear()
-        list.addAll(todoDatabase.todoDao().getList())
+        list.addAll(todoDatabase.todoDao().getTaskToDoList())
         adapter.notifyDataSetChanged()
     }
 
@@ -201,14 +203,14 @@ class ToDoListFragment : Fragment(), TaskInterface {
         alertDialog.setNegativeButton("no") { _, _ ->
         }
         todoDatabase.todoDao().deleteToDo(
-            list[position]
+            list[position].taskDataClass
         )
 
         alertDialog.show()
     }
 
     override fun itemClick(position: Int) {
-        var convertToString = Gson().toJson(list[position])
+        var convertToString = Gson().toJson(list[position].taskDataClass)
         findNavController().navigate(R.id.singleNotesFragment, bundleOf("notes" to convertToString))
 
     }

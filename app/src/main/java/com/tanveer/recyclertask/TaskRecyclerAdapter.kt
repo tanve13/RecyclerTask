@@ -9,11 +9,13 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 
 class TaskRecyclerAdapter(
     var context: Context,
-    var list: ArrayList<TaskDataClass>,
+    var list: ArrayList<TaskList>,
     var taskInterface: TaskInterface
 ) : RecyclerView.Adapter<TaskRecyclerAdapter.ViewHolder>() {
 
@@ -24,8 +26,10 @@ class TaskRecyclerAdapter(
 
         var tvTitle: TextView = view.findViewById(R.id.tvTitle)
         var tvDescription: TextView = view.findViewById(R.id.tvDescription)
+        var tvDate: TextView = view.findViewById(R.id.tvDate)
         var btnUpdate: Button = view.findViewById(R.id.btnUpdate)
         var btnDelete: Button = view.findViewById(R.id.btndelete)
+        var todo :TextView = view.findViewById(R.id.tvToDO)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,9 +46,12 @@ class TaskRecyclerAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.e(TAG, "onBindViewHolder:$position")
-        holder.tvTitle.setText(list[position].title)
-        holder.tvDescription.setText(list[position].description)
-        when (list[position].priority) {
+        holder.tvTitle.setText(list[position].taskDataClass.title)
+        holder.tvDescription.setText(list[position].taskDataClass.description)
+        var createdDate = Calendar.getInstance()
+        createdDate.time = list[position].taskDataClass.createdDate
+        holder.tvDate.setText(SimpleDateFormat("dd/MMM/YYYY").format(createdDate.time))
+        when (list[position].taskDataClass.priority) {
             0 -> {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
             }
@@ -66,6 +73,9 @@ class TaskRecyclerAdapter(
         holder.itemView.setOnClickListener {
             taskInterface.itemClick(position)
         }
+        holder.todo.setText(
+            list[position].todo.toString()
+        )
     }
 
 

@@ -3,6 +3,7 @@ package com.tanveer.recyclertask
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,7 @@ class SingleNotesFragment : Fragment(), ToDoInterface{
     lateinit var todoAdapter: ToDoItemRecycler
     var taskDataClass = TaskDataClass()
     var todoDatabase: TodoDatabase? = null
+    private val TAG = "SingleNotesFragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +59,9 @@ class SingleNotesFragment : Fragment(), ToDoInterface{
         todoDatabase = TodoDatabase.getInstance(requireContext())
         arguments?.let {
             var notes = it.getString("notes")
+            Log.e(TAG,"notes $notes")
             taskDataClass = Gson().fromJson(notes, TaskDataClass::class.java)
+            Log.e(TAG,"onViewCreated:$taskDataClass")
             binding?.tvTitle?.setText(taskDataClass.title)
             binding?.tvDescription?.setText(taskDataClass.description)
             getToDoList()
@@ -101,9 +105,11 @@ class SingleNotesFragment : Fragment(), ToDoInterface{
     }
 
     override fun updateToDoItem(position: Int) {
+        var dialogBinding:TodoDialogBinding? = null
         Dialog(requireContext()).apply {
             var dialogBinding = TodoDialogBinding.inflate(layoutInflater)
             setContentView(dialogBinding.root)
+            dialogBinding.add.setText(resources.getString(R.string.update))
             show()
             dialogBinding.add.setOnClickListener {
                 if (dialogBinding.etTodo.text.toString().isNullOrEmpty()) {
@@ -113,11 +119,12 @@ class SingleNotesFragment : Fragment(), ToDoInterface{
                         ToDoEntity(
                             taskId = taskDataClass.id,
                             id = toDoEntity[position].taskId?:0,
-                            todo = dialogBinding.etTodo.toString(),
+                            todo = dialogBinding.etTodo.text.toString(),
                             isCompleted = dialogBinding.cbIsCompleted.isChecked
                         )
                     )
                     getToDoList()
+                    todoAdapter.notifyDataSetChanged()
                     dismiss()
                 }
             }

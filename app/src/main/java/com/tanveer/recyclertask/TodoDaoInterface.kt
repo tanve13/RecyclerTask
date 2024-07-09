@@ -37,4 +37,7 @@ interface TodoDaoInterface {
 
     @Delete
     fun deleteToDoItem(toDoEntity: ToDoEntity)
+
+    @Query("Select * FROM TaskDataClass")
+    fun getTaskToDoList(): List<TaskList>
 }

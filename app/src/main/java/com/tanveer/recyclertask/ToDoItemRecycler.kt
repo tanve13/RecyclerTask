@@ -35,9 +35,8 @@ class ToDoItemRecycler(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.tvTodo.setText(todoEntity[position].todo.toString())
-        if (todoEntity[position].isCompleted == true) {
-            holder.cbIsCompleted.isChecked
-        }
+
+        holder.cbIsCompleted.isChecked = todoEntity[position].isCompleted?:false
         holder.btnToDoUpdate.setOnClickListener {
             toDoInterface.updateToDoItem(position)
         }

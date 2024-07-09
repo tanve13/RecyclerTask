@@ -2,6 +2,8 @@ package com.tanveer.recyclertask
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Calendar
+import java.util.Date
 
 @Entity()
 data class TaskDataClass(
@@ -10,5 +12,6 @@ data class TaskDataClass(
     var priority: Int = 0,
     var title: String? = "",
     var description: String? = "",
+    var createdDate: Date?= Calendar.getInstance().time
 
     )
