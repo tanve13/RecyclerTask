@@ -95,7 +95,7 @@ class ToDoListFragment : Fragment(), TaskInterface {
             }
         }
         getList()
-        binding?.rbAll?.setOnCheckedChangeListener { _, isChecked ->
+        /*binding?.rbAll?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 getList()
             }
@@ -120,7 +120,7 @@ class ToDoListFragment : Fragment(), TaskInterface {
                 list.addAll(todoDatabase.todoDao().taskAccPriority(2))
                 adapter.notifyDataSetChanged()
             }
-        }
+        }*/
     }
 
     override fun updateTask(position: Int) {

@@ -21,7 +21,7 @@ data class ToDoEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var taskId: Int? = 0,
-    var todo: String? = null,
+    var todo: String? = "",
     var isCompleted: Boolean? = false,
     var createdDate : Date?= Calendar.getInstance().time
 )
